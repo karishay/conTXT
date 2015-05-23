@@ -7,18 +7,18 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config.from_pyfile('./config.py')
 
-print app.config['ACCOUNT_SID']
-print app.config['AUTH_TOKEN']
-
 dict_of_responses = []
 
-@app.route('/recieve_data', methods=["POST"])
+@app.route('/recieve_data', methods=["GET","POST"])
 def recieve_data():
-  """Recieves incoming text data"""
-  sms_body = request.values.get("Body")
-  dict_of_responses.append(sms_body)
-  print dict_of_responses
-  return twilio.twiml.Response
+    """Recieves incoming text data"""
+    sms_body = request.values.get("Body")
+    dict_of_responses.append(sms_body)
+    resp = twilio.twiml.Response()
+    resp.message()
+    print dict_of_responses
+    return str(resp)
+
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=5051)
