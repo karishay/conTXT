@@ -28,9 +28,15 @@ def recieve_data():
 @app.route('/list_of_recordings')
 def list_of_recordings():
     """ Returns all names of recordings and which ones are active"""
-    #return render_template(jsonified dict_of_responses)
+    #name of the active recording
+    active = dict_of_responses["True"].keys()[0]
+    #name of all other recordings
+    inactive = []
+    for recording_name in dict_of_responses["False"]:
+        inactive.append(recording_name.keys()[0])
 
-    return json.dumps(dict_of_responses)
+    all_recordings = {"active": active, "inactive": inactive}
+    return json.dumps(all_recordings)
 
 @app.route('/start_recording/<name_of_recording>')
 def start_recording(name_of_recording):
