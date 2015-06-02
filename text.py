@@ -86,11 +86,23 @@ def start_recording(name_of_recording):
     #return render_template("start_recording.json", recording_name=name_of_recording)
         return "Yay, name of recording is %s" % name_of_recording
 
-@app.route('/stop_recording/<name_of_recording>')
-def stop_recording(name_of_recording):
+@app.route('/stop_recording')
+def stop_recording():
     """ Given a name of a recording, if that name is in "True", move it to
     "False" and set "True" to None, if it is not in "True", return an error """
-    return "You wanna stop recording on %s" % name_of_recording
+    active = dict_of_responses["True"].keys()[0]
+
+    # if active is not None
+    if active != None:
+        #add active to false (inactive)
+        old_active = dict_of_responses["True"]
+        dict_of_responses["False"].append(old_active)
+        #set active to None
+        dict_of_responses["True"] = {None: "" }
+        return "We have stopped recording WOOT!"
+    return "You were not actively recording anything.. Whoops?"
+
+
 
 
 if __name__ == '__main__':
