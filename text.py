@@ -56,19 +56,31 @@ def start_recording(name_of_recording):
         #save current name_of_recording (and data) within inactive to a variable
         #iterate through the list of "False" recordings
         for n in dict_of_responses["False"]:
+            print "woah n: %s" % dict_of_responses["False"].index(n)
             # if that item is the same as the one we are looking for
             if n.keys()[0] == name_of_recording:
                 # save it in a temp variable
-                temp = {name_of_recording:n[name_of_recording]}
+                print "The name given was in the false dict, which right now looks like: %r" % dict_of_responses["True"]
+                new_active = {name_of_recording:n[name_of_recording]}
                 # reset the value to whatever is in the active spot
-                n == dict_of_responses["True"]
+                old_active = dict_of_responses["True"]
+                if old_active.keys()[0] not in dict_of_responses["False"]:
+                    print " old is not in inactive, so add it: %s" % old_active.keys()[0]
+                    #delete the one that is getting promoted to active from false
+                    indice = dict_of_responses["False"].index(n)
+                    dict_of_responses["False"][indice]= old_active
+                print "Tried to add %s to the false dict:" % old_active
+                print "Did it work? : %s" % dict_of_responses["False"]
                 # reset the active spot to the one with the name we are looking for
-                dict_of_responses["True"] = temp
-                return "I have changed the active to %r " % temp
+                dict_of_responses["True"] = new_active
+                return "I have changed the active to %r " % new_active
     else:
         #if active not None
         if active != None:
+            print "before adding to false dict: %r" % dict_of_responses["False"]
             dict_of_responses["False"].append(dict_of_responses["True"])
+            print "this is what I've added to the false dicts: %r" % dict_of_responses["True"]
+            print "This is what it looks like now: %r" % dict_of_responses["False"]
             # add active to inactive (False)
         dict_of_responses["True"] = {name_of_recording: []}
     #return render_template("start_recording.json", recording_name=name_of_recording)
