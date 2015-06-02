@@ -43,10 +43,36 @@ def start_recording(name_of_recording):
     """ Given a name, check to see if there's a recording in the dict
     with that name, if so, set to active, if not, move current active to
     false and set new name to active """
-    #if name_of_recording == key in dict_of_responses[1]
-        #add
+    active = dict_of_responses["True"].keys()[0]
+    print "I am the active: %s" % active
+    print "I am the name passed in the url: %s" % name_of_recording
+    inactive = []
+    for recording_name in dict_of_responses["False"]:
+        inactive.append(recording_name.keys()[0])
+
+    if active == name_of_recording:
+        return "You're recording : %r" % name_of_recording
+    elif name_of_recording in inactive:
+        #save current name_of_recording (and data) within inactive to a variable
+        #iterate through the list of "False" recordings
+        for n in dict_of_responses["False"]:
+            # if that item is the same as the one we are looking for
+            if n.keys()[0] == name_of_recording:
+                # save it in a temp variable
+                temp = {name_of_recording:n[name_of_recording]}
+                # reset the value to whatever is in the active spot
+                n == dict_of_responses["True"]
+                # reset the active spot to the one with the name we are looking for
+                dict_of_responses["True"] = temp
+                return "I have changed the active to %r " % temp
+    else:
+        #if active not None
+        if active != None:
+            dict_of_responses["False"].append(dict_of_responses["True"])
+            # add active to inactive (False)
+        dict_of_responses["True"] = {name_of_recording: []}
     #return render_template("start_recording.json", recording_name=name_of_recording)
-    return "Yay, name of recording is %s" % name_of_recording
+        return "Yay, name of recording is %s" % name_of_recording
 
 @app.route('/stop_recording/<name_of_recording>')
 def stop_recording(name_of_recording):
