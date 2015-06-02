@@ -1,24 +1,25 @@
 from flask import Flask, request, redirect, render_template
 from twilio.rest import TwilioRestClient
 import twilio.twiml
+import json
 
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config.from_pyfile('./config.py')
 
-
-dict_of_responses = [{"True": {"feb 3rd, 2015": [1,2,3,4,5,3,4,3]}}, {"False":[{"april 18th, 2015": [1,2,3,3,2,1]}]}]
+#TODO: later, turn this into a database
+dict_of_responses = {"True": {"feb 3rd, 2015": [1,2,3,4,5,3,4,3]}, "False":[{"april 18th, 2015": [1,2,3,3,2,1]}]}
 
 @app.route('/recieve_data', methods=["GET","POST"])
 def recieve_data():
     """Recieves incoming text data, if "True" is not None, add to list"""
-    if dict_of_responses[0]["True"] != None:
+    if dict_of_responses["True"] != None:
         sms_body = request.values.get("Body")
         #get the name of the recording
-        recording_name = dict_of_responses[0]["True"].keys()[0]
+        recording_name = dict_of_responses["True"].keys()[0]
         #look up by name of recording and add the sms to the list
-        dict_of_responses[0]["True"][recording_name].append(sms_body)
+        dict_of_responses["True"][recording_name].append(sms_body)
     resp = twilio.twiml.Response()
     resp.message()
     print dict_of_responses
@@ -28,7 +29,8 @@ def recieve_data():
 def list_of_recordings():
     """ Returns all names of recordings and which ones are active"""
     #return render_template(jsonified dict_of_responses)
-    return render_template("queued_list.json")
+
+    return json.dumps(dict_of_responses)
 
 @app.route('/start_recording/<name_of_recording>')
 def start_recording(name_of_recording):
